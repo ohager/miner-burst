@@ -1,3 +1,4 @@
+#pragma once
 #define RAPIDJSON_NO_SIZETYPEDEFINE
 
 namespace rapidjson { typedef size_t SizeType; }
@@ -21,8 +22,8 @@ using namespace rapidjson;
 #include <ws2tcpip.h>
 #include <mswsock.h> // Need for SO_UPDATE_CONNECT_CONTEXT
 
+#include "sender.h"
 #include "curses.h" 
-//#include "panel.h" 
 #include "sph_shabal.h"
 #include "mshabal.h"
 #include "mshabal256.h"
@@ -30,37 +31,21 @@ using namespace rapidjson;
 #include "InstructionSet.h"
 #include "picohttpparser.h"
 
-/*
-#define GPU_ON_C 1
-//#define GPU_ON_CPP
-
-#ifdef GPU_ON_CPP
-#define __CL_ENABLE_EXCEPTIONS 100
-#include <CL\cl.hpp>
-
-#include "OpenCL_Error.h"
-#include "OpenCL_Platform.h"
-#include "OpenCL_Device.h"
-#endif
-
-#ifdef GPU_ON_C
-//#define __CL_ENABLE_EXCEPTIONS 100
-#include <CL\cl.h>
-#endif
-*/
-
 HANDLE hHeap;
 
 bool exit_flag = false;
 #ifdef __AVX2__
-	char const *const version = "v1.170820_AVX2";
+	char const *const version = "v1.170820_AVX2@0.1"; // fork version 0.1 based on 1.170820
 #else
 	#ifdef __AVX__
-		char const *const version = "v1.170820_AVX";
+		char const *const version = "v1.170820_AVX@0.1";
 	#else
-		char const *const version = "v1.170820";
+		char const *const version = "v1.170820@0.1";
 	#endif
 #endif 
+
+char const *const LOG_TYPE_FILE = "file";
+char const *const LOG_TYPE_STDOUT = "stdout";
 
 unsigned long long startnonce = 0;
 unsigned long nonces = 0;
@@ -92,29 +77,24 @@ char *p_minerPath = nullptr;		// путь к папке майнера
 size_t miner_mode = 0;				// режим майнера. 0=соло, 1=пул
 size_t cache_size = 100000;			// размер кэша чтения плотов
 std::vector<std::string> paths_dir; // пути
-//bool show_msg = false;				// Показать общение с сервером в отправщике
-//bool show_updates = false;			// Показать общение с сервером в апдейтере
 FILE * fp_Log = nullptr;			// указатель на лог-файл
 size_t send_interval = 100;			// время ожидания между отправками
 size_t update_interval = 1000;		// время ожидания между апдейтами
 short win_size_x = 80;
 short win_size_y = 60;
-//bool use_fast_rcv = false;
 bool use_debug = false;
 bool enable_proxy = false;
-//bool send_best_only = true;
 bool use_wakeup = false;
 bool use_log = true;				// Вести лог
+std::string log_type = LOG_TYPE_FILE;  
 bool use_boost = false;				// Использовать повышенный приоритет для потоков
 bool show_winner = false;			// показывать победителя
-//short can_generate = 0;				// 0 - disable; 1 - can start generate; 2 - already run generator
 
 
 SYSTEMTIME cur_time;				// Текущее время
 unsigned long long total_size = 0;	// Общий объем плотов
 
 WINDOW * win_main;
-//PANEL  *panel_main;
 
 std::vector<std::thread> worker;
 
@@ -136,10 +116,6 @@ struct t_files{
 	unsigned long long StartNonce;
 	unsigned long long Nonces;
 	unsigned long long Stagger;
-	//unsigned State;// = 0;
-	//t_files(std::string p_Path, std::string p_Name, unsigned long long p_Size, unsigned p_State) : Path(std::move(p_Path)), Name(std::move(p_Name)), Size(p_Size), State(p_State){};
-	//t_files(t_files &&fill) : Path(std::move(fill.Path)), Name(std::move(fill.Name)), Size(fill.Size), State(fill.State){};
-	//t_files& operator=(const t_files& fill) = default;
 };
 
 struct t_shares{
@@ -147,7 +123,6 @@ struct t_shares{
 	unsigned long long account_id;// = 0;
 	unsigned long long best;// = 0;
 	unsigned long long nonce;// = 0;
-	//t_shares(std::string p_file_name, unsigned long long p_account_id, unsigned long long p_best, unsigned long long p_nonce) : file_name(std::move(p_file_name)), account_id(p_account_id), best(p_best), nonce(p_nonce){};
 };
 
 std::vector<t_shares> shares;
@@ -158,18 +133,14 @@ struct t_best{
 	unsigned long long nonce;// = 0;
 	unsigned long long DL;// = 0;
 	unsigned long long targetDeadline;// = 0;
-	//t_best(unsigned long long p_account_id, unsigned long long p_best, unsigned long long p_nonce, unsigned long long p_DL, unsigned long long p_targetDeadline) : account_id(p_account_id), best(p_best), nonce(p_nonce), DL(p_DL), targetDeadline(p_targetDeadline){};
 };
 
 std::vector<t_best> bests;
 
 struct t_session{
 	SOCKET Socket;
-//	unsigned long long ID;
 	unsigned long long deadline;
 	t_shares body;
-	//	unsigned long long best;// = 0;
-//	unsigned long long nonce;// = 0;
 };
 
 std::vector<t_session> sessions;
@@ -202,12 +173,9 @@ int load_config(char const *const filename);
 //LPSTR DisplayErrorText(DWORD dwLastError);
 int xdigit(char const digit);
 size_t xstr2strr(char *buf, size_t const bufsize, const char *const in);
-//std::wstring str2wstr(std::string &s);
 void GetPass(char const *const p_strFolderPath);
 size_t GetFiles(const std::string &str, std::vector <t_files> *p_files);
 size_t Get_index_acc(unsigned long long const key);
-//void gen_nonce(unsigned long long addr, unsigned long long start_nonce, unsigned long long count);
-//void generator_i(size_t number);
 void proxy_i(void);
 void send_i(void);
 void procscoop_m_4(unsigned long long const nonce, unsigned long long const n, char const *const data, size_t const acc, const std::string &file_name);
@@ -221,8 +189,4 @@ void pollLocal(void);
 void updater_i(void);
 void hostname_to_ip(char const *const  in_addr, char* out_addr);
 void GetCPUInfo(void);
-//std::vector<std::shared_ptr<OpenclPlatform>> GPU_PlatformInfo(void);
-//int GPU_DeviceInfo(unsigned platform);
-//int GPU(void);
-//int GPU1(void);
 int main(int argc, char **argv);

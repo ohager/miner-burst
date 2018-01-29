@@ -1,1 +1,10 @@
 generator.cpp
+
+# VS specific stuff
+.vs/
+x64/
+Debug/
+*.opensdf
+*.sdf
+*.suo
+*.user
