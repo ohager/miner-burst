@@ -6,8 +6,8 @@ using namespace rapidjson;
 
 #include "rapidjson/document.h"		// rapidjson's DOM-style API
 #include "rapidjson/error/en.h"
-#include "network/server.h"
 
+#include "network/server.h"
 
 #include <string.h>
 #include <sstream>

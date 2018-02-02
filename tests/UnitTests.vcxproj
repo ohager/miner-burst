@@ -152,11 +152,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\network\JsonPacket.h" />
+    <ClCompile Include="..\network\ipc_packet.cpp" />
+    <ClCompile Include="ipc_packet.test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\network\JsonPacket.cpp" />
-    <ClCompile Include="jsonpacket_tests.cpp" />
+    <ClInclude Include="..\network\ipc_packet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

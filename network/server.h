@@ -1,5 +1,5 @@
 #pragma once
-#include "Network.h"
+#include "network.h"
 #include "network_packet.h"
 
 class Server

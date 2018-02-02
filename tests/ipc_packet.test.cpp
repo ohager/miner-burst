@@ -1,20 +1,20 @@
 #include "CppUnitTest.h"
-#include "../../network/JsonPacket.h"
+#include "../network/ipc_packet.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace UnitTests
 {		
-	TEST_CLASS(UnitTest1)
+	TEST_CLASS(IPCPacketTest)
 	{
 	public:
 		
-		TEST_METHOD(TestJsonPacketSerialization)
+		TEST_METHOD(TestIPCPacketSerialization)
 		{
-			JsonPacket jp;
+			ipc_packet jp;
 
-			jp.setType("testType");
-			jp.setData("testData");
+			jp.type("testType");
+			jp.data("testData");
 
 			string result = jp.serialize();
 
