@@ -3,7 +3,6 @@ generator.cpp
 # VS specific stuff
 .vs/
 x64/
-ipch/
 Debug/
 *.opensdf
 *.sdf

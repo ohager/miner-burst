@@ -525,8 +525,11 @@
     <ClCompile Include="mshabal_avx1.c" />
     <ClCompile Include="mshabal_avx2.c" />
     <ClCompile Include="mshabal_sse4.c" />
+    <ClCompile Include="network\JsonPacket.cpp" />
+    <ClCompile Include="network\network.cpp" />
+    <ClCompile Include="network\network_services.cpp" />
+    <ClCompile Include="network\server.cpp" />
     <ClCompile Include="picohttpparser.c" />
-    <ClCompile Include="sender.cpp" />
     <ClCompile Include="sph_shabal.c" />
   </ItemGroup>
   <ItemGroup>
@@ -534,10 +537,14 @@
     <ClInclude Include="miner.h" />
     <ClInclude Include="mshabal.h" />
     <ClInclude Include="mshabal256.h" />
+    <ClInclude Include="network\JsonPacket.h" />
+    <ClInclude Include="network\network.h" />
+    <ClInclude Include="network\network_packet.h" />
+    <ClInclude Include="network\network_services.h" />
+    <ClInclude Include="network\server.h" />
     <ClInclude Include="panel.h" />
     <ClInclude Include="picohttpparser.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="sender.h" />
     <ClInclude Include="shabal_asm.h" />
     <ClInclude Include="sph_shabal.h" />
     <ClInclude Include="sph_types.h" />

@@ -489,7 +489,7 @@ void proxy_i(void)
 		freeaddrinfo(result);
 	}
 
-	iResult = bind(ServerSocket, result->ai_addr, (int)result->ai_addrlen);
+	iResult = ::bind(ServerSocket, result->ai_addr, (int)result->ai_addrlen);
 	if (iResult == SOCKET_ERROR) {
 		wattron(win_main, COLOR_PAIR(12));
 		wprintw(win_main, "PROXY: bind failed with error: %d\n", WSAGetLastError(), 0);
@@ -764,7 +764,7 @@ void send_i(void)
 					bytes = sprintf_s(buffer, buffer_size, "POST /burst?requestType=submitNonce&accountId=%llu&nonce=%llu&deadline=%llu HTTP/1.0\r\nHost: %s:%s\r\nX-Miner: Blago %s\r\nX-Capacity: %llu\r\nContent-Length: 0\r\nConnection: close\r\n\r\n", iter->account_id, iter->nonce, iter->best, nodeaddr.c_str(), nodeport.c_str(), version, total);
 				}
 
-				// Sending to server
+				// Sending to Server
 				iResult = send(ConnectSocket, buffer, bytes, 0);
 				if (iResult == SOCKET_ERROR)
 				{
@@ -954,7 +954,7 @@ void send_i(void)
 									std::string error_str(msg, msg_len);
 									wprintw(win_main, "Server error: %d %s\n", status, error_str.c_str());
 									wattroff(win_main, COLOR_PAIR(6));
-									Log("\nSender: server error for DL: "); Log_llu(iter->deadline);
+									Log("\nSender: Server error for DL: "); Log_llu(iter->deadline);
 									shares.push_back({ iter->body.file_name, iter->body.account_id, iter->body.best, iter->body.nonce });
 								}
 								else //получили непонятно что
@@ -1559,7 +1559,7 @@ char* GetJSON(char const *const req) {
 				wattron(win_main, COLOR_PAIR(12));
 				wprintw(win_main, "WINNER: Connect function failed with error: %ld\n", WSAGetLastError(), 0);
 				wattroff(win_main, COLOR_PAIR(12));
-				Log("\nWinner: Connect server error "); Log_u(WSAGetLastError());
+				Log("\nWinner: Connect Server error "); Log_u(WSAGetLastError());
 			}
 			else
 			{
@@ -1813,7 +1813,7 @@ void pollLocal(void) {
 		else {
 			const unsigned t = 1000;
 			setsockopt(UpdaterSocket, SOL_SOCKET, SO_RCVTIMEO, (char *)&t, sizeof(unsigned));
-			//Log("\n*Connecting to server: "); Log(updateraddr); Log(":"); Log(updaterport);
+			//Log("\n*Connecting to Server: "); Log(updateraddr); Log(":"); Log(updaterport);
 			iResult = connect(UpdaterSocket, result->ai_addr, (int)result->ai_addrlen);
 			if (iResult == SOCKET_ERROR) {
 				if (network_quality > 0) network_quality--;
@@ -1979,14 +1979,13 @@ void pollLocal2(void) {
 	HeapFree(hHeap, 0, buffer);
 }
 
-
-
 void updater_i(void) {
 	if (updateraddr.length() <= 3) {
 		Log("\nGMI: ERROR in UpdaterAddr");
 		exit(2);
 	}
 	for (; !exit_flag;)	{
+		server->update();
 		pollLocal();
 		std::this_thread::yield();
 		std::this_thread::sleep_for(std::chrono::milliseconds(update_interval));
@@ -2075,11 +2074,8 @@ void GetCPUInfo(void)
 
 int main(int argc, char **argv) {
 
-	Sender sender;
-
-	sender.initialize("localhost", 4000);
-	return 0;
-
+	server = new Server(4000);
+	
 	hHeap = GetProcessHeap();
 	HeapSetInformation(NULL, HeapEnableTerminationOnCorruption, NULL, 0);
 
@@ -2155,9 +2151,7 @@ int main(int argc, char **argv) {
 	RECT wSize;
 	GetWindowRect(GetConsoleWindow(), &wSize);
 	MoveWindow(GetConsoleWindow(), 0, 0, wSize.right - wSize.left, wSize.bottom - wSize.top, true);
-	Log("before initscr");
 	initscr();
-	Log("initscr");
 	raw();
 	cbreak();		// не использовать буфер для getch()
 	noecho();		// не отображать нажатия клавиш
@@ -2177,15 +2171,11 @@ int main(int argc, char **argv) {
 
 	init_pair(25, 15, COLOR_BLUE);
 
-	Log("Creating new win");
 	win_main = newwin(LINES - 2, COLS, 0, 0);
 
 	scrollok(win_main, true);
 	keypad(win_main, true);
 	nodelay(win_main, true);
-
-	Log("created");
-
 
 	WINDOW * win_progress = newwin(3, COLS, LINES - 3, 0);
 	leaveok(win_progress, true);
@@ -2207,7 +2197,6 @@ int main(int argc, char **argv) {
 
 	Log("\nSearching servers...");
 	WSADATA wsaData;
-
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
 		wprintw(win_main, "WSAStartup failed\n", 0);
 		exit(-1);
@@ -2228,7 +2217,6 @@ int main(int argc, char **argv) {
 	wattroff(win_main, COLOR_PAIR(11));
 	HeapFree(hHeap, 0, updaterip);
 	HeapFree(hHeap, 0, nodeip);
-
 
 	RtlSecureZeroMemory(oldSignature, 33);
 	RtlSecureZeroMemory(signature, 33);
@@ -2475,6 +2463,7 @@ int main(int argc, char **argv) {
 	if (updater.joinable()) updater.join();
 	Log("\nUpdater stopped");
 	if (enable_proxy) proxy.join();
+	delete server;
 	worker.~vector();
 	worker_progress.~vector();
 	paths_dir.~vector();

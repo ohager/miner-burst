@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\network">
+      <UniqueIdentifier>{4b8cdb37-5cc0-4165-ae1c-2b292e129866}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\network">
+      <UniqueIdentifier>{3a6cd092-04d2-4865-b5e4-ab67a4dfceb9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="miner.cpp">
@@ -36,8 +42,17 @@
     <ClCompile Include="picohttpparser.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sender.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="network\server.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="network\network_services.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="network\network.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="network\JsonPacket.cpp">
+      <Filter>Source Files\network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -71,8 +86,20 @@
     <ClInclude Include="picohttpparser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sender.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="network\server.h">
+      <Filter>Header Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\network_packet.h">
+      <Filter>Header Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\network.h">
+      <Filter>Header Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\network_services.h">
+      <Filter>Header Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\JsonPacket.h">
+      <Filter>Header Files\network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

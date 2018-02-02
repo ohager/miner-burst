@@ -6,6 +6,7 @@ using namespace rapidjson;
 
 #include "rapidjson/document.h"		// rapidjson's DOM-style API
 #include "rapidjson/error/en.h"
+#include "network/server.h"
 
 
 #include <string.h>
@@ -22,7 +23,6 @@ using namespace rapidjson;
 #include <ws2tcpip.h>
 #include <mswsock.h> // Need for SO_UPDATE_CONNECT_CONTEXT
 
-#include "sender.h"
 #include "curses.h" 
 #include "sph_shabal.h"
 #include "mshabal.h"
@@ -95,6 +95,7 @@ SYSTEMTIME cur_time;				// Текущее время
 unsigned long long total_size = 0;	// Общий объем плотов
 
 WINDOW * win_main;
+Server * server = nullptr;
 
 std::vector<std::thread> worker;
 
