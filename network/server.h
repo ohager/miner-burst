@@ -6,7 +6,7 @@ class Server
 
 public:
 
-    Server(unsigned int listen_port);
+    Server(unsigned int listen_port = DEFAULT_PORT);
     ~Server(void);
 
     void update();

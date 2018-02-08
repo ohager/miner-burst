@@ -7,9 +7,8 @@
 using namespace std; 
 #pragma comment (lib, "Ws2_32.lib")
 
-#define DEFAULT_BUFLEN 512
-#define DEFAULT_PORT 6881 
-#define MAX_PACKET_SIZE 16 * 1024
+#define DEFAULT_PORT 4000 
+#define MAX_PACKET_SIZE (4 * 1024)
 
 class Network
 {

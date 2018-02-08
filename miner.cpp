@@ -1964,9 +1964,8 @@ void updater_i(void) {
 		Log("\nGMI: ERROR in UpdaterAddr");
 		exit(2);
 	}
-	Server server(4000);
 	for (; !exit_flag;)	{
-		server.update();
+		server->update();
 		pollLocal();
 		std::this_thread::yield();
 		std::this_thread::sleep_for(std::chrono::milliseconds(update_interval));
@@ -2055,6 +2054,7 @@ void GetCPUInfo(void)
 
 int main(int argc, char **argv) {
 
+	server = new Server();
 	hHeap = GetProcessHeap();
 	HeapSetInformation(NULL, HeapEnableTerminationOnCorruption, NULL, 0);
 

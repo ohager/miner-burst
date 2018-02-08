@@ -46,13 +46,13 @@ void Server::receiveJsonFromClients()
 			continue;
 		}
 
-		rapidjson::Document d;
-		// remove non-printable char
+		// remove non-printable End-Of-Message char
 		if (buf[data_length - 1] < ' ')
 		{
 			buf[data_length - 1] = 0;
 		}
 
+		rapidjson::Document d;
 		d.Parse(buf);
 		if (d.HasParseError())
 		{
