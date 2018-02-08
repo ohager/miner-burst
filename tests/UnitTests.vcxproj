@@ -152,11 +152,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\network\ipc_packet.cpp" />
-    <ClCompile Include="ipc_packet.test.cpp" />
+    <ClCompile Include="MessageSerialization.test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\network\ipc_packet.h" />
+    <ClInclude Include="..\network\messages\HandshakeAckMessage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,4 +1,4 @@
-#include "Network.h"
+#include "network.h"
 #include <string>
 
 
@@ -113,12 +113,18 @@ bool Network::acceptNewClient(unsigned int & id)
     return false;
 }
 
+void Network::refuseClient(unsigned int client_id)
+{
+	sessions.erase(client_id);
+}
+
 // receive incoming data
 int Network::receiveData(unsigned int client_id, char * recvbuf)
 {
     if( sessions.find(client_id) != sessions.end() )
     {
 	    const SOCKET currentSocket = sessions[client_id];
+		memset(recvbuf, 0, sizeof(recvbuf));
         iResult = network_services::receiveMessage(currentSocket, recvbuf, MAX_PACKET_SIZE);
 
         if (iResult == 0)

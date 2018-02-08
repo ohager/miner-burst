@@ -525,10 +525,8 @@
     <ClCompile Include="mshabal_avx1.c" />
     <ClCompile Include="mshabal_avx2.c" />
     <ClCompile Include="mshabal_sse4.c" />
-    <ClCompile Include="network\ipc_packet.cpp" />
     <ClCompile Include="network\network.cpp" />
     <ClCompile Include="network\network_services.cpp" />
-    <ClCompile Include="network\protocol\mining_message.cpp" />
     <ClCompile Include="network\server.cpp" />
     <ClCompile Include="picohttpparser.c" />
     <ClCompile Include="sph_shabal.c" />
@@ -538,13 +536,11 @@
     <ClInclude Include="miner.h" />
     <ClInclude Include="mshabal.h" />
     <ClInclude Include="mshabal256.h" />
-    <ClInclude Include="network\ipc_packet.h" />
+    <ClInclude Include="network\messages\BaseMessage.h" />
+    <ClInclude Include="network\messages\HandshakeAckMessage.h" />
+    <ClInclude Include="network\messages\MiningMessage.h" />
     <ClInclude Include="network\network.h" />
-    <ClInclude Include="network\network_packet.h" />
     <ClInclude Include="network\network_services.h" />
-    <ClInclude Include="network\protocol\base_message.h" />
-    <ClInclude Include="network\protocol\json_message.h" />
-    <ClInclude Include="network\protocol\mining_message.h" />
     <ClInclude Include="network\server.h" />
     <ClInclude Include="panel.h" />
     <ClInclude Include="picohttpparser.h" />

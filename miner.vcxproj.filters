@@ -19,11 +19,8 @@
     <Filter Include="Source Files\network">
       <UniqueIdentifier>{3a6cd092-04d2-4865-b5e4-ab67a4dfceb9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\network\protocol">
+    <Filter Include="Header Files\network\messages">
       <UniqueIdentifier>{2e8ef2b5-52bf-4f06-acdf-a1330e77a680}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\network\protocol">
-      <UniqueIdentifier>{a2ed0c31-75a2-4fca-a810-c36d865d0752}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -55,12 +52,6 @@
       <Filter>Source Files\network</Filter>
     </ClCompile>
     <ClCompile Include="network\network.cpp">
-      <Filter>Source Files\network</Filter>
-    </ClCompile>
-    <ClCompile Include="network\protocol\mining_message.cpp">
-      <Filter>Source Files\network\protocol</Filter>
-    </ClCompile>
-    <ClCompile Include="network\ipc_packet.cpp">
       <Filter>Source Files\network</Filter>
     </ClCompile>
   </ItemGroup>
@@ -104,20 +95,14 @@
     <ClInclude Include="network\network_services.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
-    <ClInclude Include="network\protocol\base_message.h">
-      <Filter>Header Files\network\protocol</Filter>
+    <ClInclude Include="network\messages\BaseMessage.h">
+      <Filter>Header Files\network\messages</Filter>
     </ClInclude>
-    <ClInclude Include="network\protocol\mining_message.h">
-      <Filter>Header Files\network\protocol</Filter>
+    <ClInclude Include="network\messages\HandshakeAckMessage.h">
+      <Filter>Header Files\network\messages</Filter>
     </ClInclude>
-    <ClInclude Include="network\network_packet.h">
-      <Filter>Header Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include="network\protocol\json_message.h">
-      <Filter>Header Files\network\protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="network\ipc_packet.h">
-      <Filter>Header Files\network</Filter>
+    <ClInclude Include="network\messages\MiningMessage.h">
+      <Filter>Header Files\network\messages</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

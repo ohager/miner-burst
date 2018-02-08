@@ -282,27 +282,7 @@ int load_config(char const *const filename)
 	return 1;
 }
 
-/*
-LPSTR DisplayErrorText( DWORD dwLastError )
-{
-#pragma warning(suppress: 6102)
-HMODULE hModule = nullptr; // default to system source
-LPSTR MessageBuffer = nullptr;
-DWORD dwBufferLength;
-DWORD dwFormatFlags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM ;
-
-if(dwLastError >= NERR_BASE && dwLastError <= MAX_NERR)
-{
-hModule = LoadLibraryEx( TEXT("netmsg.dll"), nullptr, LOAD_LIBRARY_AS_DATAFILE );
-if(hModule != nullptr) dwFormatFlags |= FORMAT_MESSAGE_FROM_HMODULE;
-}
-dwBufferLength = FormatMessageA(dwFormatFlags, hModule, dwLastError, MAKELANGID(LANG_SYSTEM_DEFAULT, SUBLANG_SYS_DEFAULT), (LPSTR)&MessageBuffer, 0, nullptr);
-if(hModule != nullptr) FreeLibrary(hModule);
-
-return MessageBuffer;
-}
-*/
-
+// TODO: Extract to separate class
 // Helper routines taken from http://stackoverflow.com/questions/1557400/hex-to-char-array-in-c
 int xdigit(char const digit){
 	int val;
@@ -1984,8 +1964,9 @@ void updater_i(void) {
 		Log("\nGMI: ERROR in UpdaterAddr");
 		exit(2);
 	}
+	Server server(4000);
 	for (; !exit_flag;)	{
-		server->update();
+		server.update();
 		pollLocal();
 		std::this_thread::yield();
 		std::this_thread::sleep_for(std::chrono::milliseconds(update_interval));
@@ -2074,8 +2055,6 @@ void GetCPUInfo(void)
 
 int main(int argc, char **argv) {
 
-	server = new Server(4000);
-	
 	hHeap = GetProcessHeap();
 	HeapSetInformation(NULL, HeapEnableTerminationOnCorruption, NULL, 0);
 
@@ -2292,7 +2271,6 @@ int main(int argc, char **argv) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(2));
 	};
 
-
 	// Main loop
 	for (; !exit_flag;)
 	{
@@ -2359,12 +2337,10 @@ int main(int argc, char **argv) {
 			worker.push_back(std::thread(work_i, i));
 		}
 
-
 		memmove(oldSignature, signature, 32);
 		unsigned long long old_baseTarget = baseTarget;
 		unsigned long long old_height = height;
 		wclear(win_progress);
-
 
 		// Wait until signature changed or exit
 		while ((memcmp(signature, oldSignature, 32) == 0) && !exit_flag)

@@ -4,12 +4,12 @@
 #include "network_services.h"
 #include <ws2tcpip.h>
 #include <map>
-#include "network_packet.h"
 using namespace std; 
 #pragma comment (lib, "Ws2_32.lib")
 
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT 6881 
+#define MAX_PACKET_SIZE 16 * 1024
 
 class Network
 {
@@ -25,6 +25,8 @@ public:
 	
 	// accept new connections
     bool acceptNewClient(unsigned int & id);
+
+	void refuseClient(unsigned int id);
 
     // Socket to listen for new connections
     SOCKET ListenSocket;

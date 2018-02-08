@@ -1,6 +1,5 @@
 #pragma once
 #include "network.h"
-#include "network_packet.h"
 
 class Server
 {
@@ -12,11 +11,12 @@ public:
 
     void update();
 
-	void receiveFromClients();
+	void receiveJsonFromClients();
 
 	void sendActionPackets();
 
 private:
+	void handleMessage(const std::string&);
 
    // IDs for the clients connecting for table in Network 
     static unsigned int client_id;
@@ -24,6 +24,4 @@ private:
    // The Network object 
     Network* network;
 
-	// data buffer
-   char network_data[MAX_PACKET_SIZE];
 };

@@ -15,15 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\network\ipc_packet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ipc_packet.test.cpp">
+    <ClCompile Include="MessageSerialization.test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\network\ipc_packet.h">
+    <ClInclude Include="..\network\messages\HandshakeAckMessage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

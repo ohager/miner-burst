@@ -1,14 +1,18 @@
 #include "server.h"
+#include <iostream>
+#include "../rapidjson/rapidjson.h"
+#include "../rapidjson/document.h"
+#include "messages/HandshakeAckMessage.h"
 
-unsigned int Server::client_id; 
+unsigned int Server::client_id;
 
 Server::Server(unsigned int listen_port)
 {
-    // id's to assign clients for our table
-    client_id = 0;
+	// id's to assign clients for our table
+	client_id = 0;
 
-    // set up the Server Network to listen 
-    network = new Network(listen_port); 
+	// set up the Server Network to listen 
+	network = new Network(listen_port);
 }
 
 Server::~Server(void)
@@ -17,77 +21,82 @@ Server::~Server(void)
 
 void Server::update()
 {
-    // get new clients
-   if(network->acceptNewClient(client_id))
-   {
-        printf("client %d has been connected to the Server\n",client_id);
+	// get new clients
+	if (network->acceptNewClient(client_id))
+	{
+		printf("client %d has been connected to the Server\n", client_id);
 
-        client_id++;
-   }
+		client_id++;
+	}
 
-   receiveFromClients();
+	receiveJsonFromClients();
 }
 
-void Server::receiveFromClients()
+void Server::receiveJsonFromClients()
 {
+	char buf[MAX_PACKET_SIZE];
+	for (auto iter = network->sessions.begin(); iter != network->sessions.end(); ++iter)
+	{
+		memset(buf, 0, sizeof(buf));
+		int data_length = network->receiveData(iter->first, buf);
 
-    Packet packet;
+		if (data_length <= 0)
+		{
+			//no data received
+			continue;
+		}
 
-	for(std::map<unsigned int, SOCKET>::iterator iter = network->sessions.begin(); iter != network->sessions.end(); iter++)
-    {
-        int data_length = network->receiveData(iter->first, network_data);
+		rapidjson::Document d;
+		// remove non-printable char
+		if (buf[data_length - 1] < ' ')
+		{
+			buf[data_length - 1] = 0;
+		}
 
-        if (data_length <= 0) 
-        {
-            //no data recieved
-            continue;
-        }
+		d.Parse(buf);
+		if (d.HasParseError())
+		{
+			int code = d.GetParseError();
+			std::cerr << code;
+		}
 
-        unsigned int i = 0;
-        while (i < static_cast<unsigned int>(data_length)) 
-        {
-            packet.deserialize(&(network_data[i]));
-            i += sizeof(Packet);
+		if (!d.HasMember("type"))
+		{
+			continue;
+		}
 
-            switch (packet.packet_type) {
+		std::string type = d["type"].GetString();
 
-                case INIT_CONNECTION:
-
-                    printf("Server received init packet from client\n");
-
-                    sendActionPackets();
-
-                    break;
-
-                case ACTION_EVENT:
-
-                    printf("Server received action event packet from client\n");
-
-                    sendActionPackets();
-
-                    break;
-
-                default:
-
-                    printf("error in packet types\n");
-
-                    break;
-            }
-        }
-    }
+		handleMessage(type);
+	}
 }
 
 
 void Server::sendActionPackets()
 {
-    // send action packet
-    const unsigned int packet_size = sizeof(Packet);
-    char packet_data[packet_size];
+	// send action packet
+	/*
+	const unsigned int packet_size = sizeof(JsonPacket);
+	char packet_data[packet_size];
 
-    Packet packet;
-    packet.packet_type = ACTION_EVENT;
+	JsonPacket packet;
 
-    packet.serialize(packet_data);
+	packet.serializeImpl(packet_data);
+	
+	network->sendToAll(packet_data, packet_size);
+	*/
+}
 
-    network->sendToAll(packet_data,packet_size);
+void Server::handleMessage(const std::string& type)
+{
+	
+	if (type == "handshake")
+	{
+		HandshakeAckMessage ack;
+		size_t len;
+		const char * serialized = ack.serialize(len);
+		std::cout << serialized << " size: " << len;
+		network->sendToAll(const_cast<char*>(serialized), len);
+	}
+	// do I receive something else?
 }

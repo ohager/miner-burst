@@ -1,14 +1,13 @@
 #pragma once
 
 #include <string>
-#include "json_message.h"
 
 using namespace std;
 
-class mining_message : public json_message
+class MiningMessage
 {
 public:
-	mining_message();
+	MiningMessage();
 
 	void deadline(const std::string& dl)
 	{
@@ -29,10 +28,6 @@ public:
 	{
 		return _networkdiff;
 	}
-
-
-protected:
-	void mount_json(rapidjson::Document& document) override;
 
 private:
 	string _deadline;
