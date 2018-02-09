@@ -1,5 +1,6 @@
 #pragma once
 #define RAPIDJSON_NO_SIZETYPEDEFINE
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 namespace rapidjson { typedef size_t SizeType; }
 using namespace rapidjson;

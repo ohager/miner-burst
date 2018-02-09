@@ -9,8 +9,14 @@ using namespace std;
 class HeartbeatMessage : public BaseMessage
 {
 public:
-	HeartbeatMessage(unsigned long iteration) : BaseMessage("heartbeat"), _iteration(iteration)
+	HeartbeatMessage() : BaseMessage("heartbeat")
 	{
+		++_iteration;
+	}
+
+	const unsigned long& iteration() const
+	{
+		return _iteration;
 	}
 
 protected:
@@ -22,7 +28,8 @@ protected:
 	}
 
 private:
-
-	unsigned long _iteration;
+	static unsigned long _iteration;
 };
+
+unsigned long HeartbeatMessage::_iteration= 0;
 

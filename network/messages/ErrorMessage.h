@@ -7,9 +7,9 @@
 class ErrorMessage : public BaseMessage
 {
 public:
-	ErrorMessage() : BaseMessage("error")
+	ErrorMessage(const std::string & error) : BaseMessage("error")
 	{
-		_error= "";
+		_error= error;
 	}
 
 	void error(const std::string& errorMsg)
