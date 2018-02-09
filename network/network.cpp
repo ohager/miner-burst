@@ -124,13 +124,12 @@ int Network::receiveData(unsigned int client_id, char * recvbuf)
     if( sessions.find(client_id) != sessions.end() )
     {
 	    const SOCKET currentSocket = sessions[client_id];
-		//memset(recvbuf, 0, sizeof(recvbuf));
+		memset(recvbuf, 0, sizeof(recvbuf));
         iResult = network_services::receiveMessage(currentSocket, recvbuf, MAX_PACKET_SIZE);
 
         if (iResult == 0)
         {
 			printf("Connection closed for client #%u\n", client_id);
-			refuseClient(client_id);
             closesocket(currentSocket);
         }
 
