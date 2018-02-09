@@ -57,42 +57,40 @@ char str_signature[65];
 char oldSignature[33];
 unsigned long long height = 0;
 unsigned long long baseTarget = 0;
-unsigned long long targetDeadlineInfo = 0;			// Максимальный дедлайн пула
-unsigned long long my_target_deadline = MAXDWORD;	// 4294967295;
+unsigned long long targetDeadlineInfo = 0;			
+unsigned long long my_target_deadline = MAXDWORD;
 volatile int stopThreads = 0;
-char *pass = nullptr;							// пароль
+char *pass = nullptr;							
+std::string nodeaddr = "localhost";
+std::string nodeport = "8125";
 
-std::string nodeaddr = "localhost";	// адрес пула
-std::string nodeport = "8125";		// порт пула
+std::string updateraddr = "localhost";
+std::string updaterport = "8125";
 
-std::string updateraddr = "localhost";// адрес пула
-std::string updaterport = "8125";		// порт пула
+std::string infoaddr = "localhost";	
+std::string infoport = "8125";
 
-std::string infoaddr = "localhost";	// адрес пула
-std::string infoport = "8125";		// порт пула
+std::string proxyport = "8125";	
 
-std::string proxyport = "8125";		// порт пула
-
-char *p_minerPath = nullptr;		// путь к папке майнера
-size_t miner_mode = 0;				// режим майнера. 0=соло, 1=пул
-size_t cache_size = 100000;			// размер кэша чтения плотов
-std::vector<std::string> paths_dir; // пути
-FILE * fp_Log = nullptr;			// указатель на лог-файл
-size_t send_interval = 100;			// время ожидания между отправками
-size_t update_interval = 1000;		// время ожидания между апдейтами
+char *p_minerPath = nullptr;
+size_t miner_mode = 0; // 0=solo, 1=pool
+size_t cache_size = 100000;	
+std::vector<std::string> paths_dir; 
+FILE * fp_Log = nullptr;
+size_t send_interval = 100;
+size_t update_interval = 1000;
 short win_size_x = 80;
 short win_size_y = 60;
 bool use_debug = false;
 bool enable_proxy = false;
 bool use_wakeup = false;
-bool use_log = true;				// Вести лог
+bool use_log = true;
 std::string log_type = LOG_TYPE_FILE;  
-bool use_boost = false;				// Использовать повышенный приоритет для потоков
-bool show_winner = false;			// показывать победителя
+bool use_boost = false;
+bool show_winner = false;
 
-
-SYSTEMTIME cur_time;				// Текущее время
-unsigned long long total_size = 0;	// Общий объем плотов
+SYSTEMTIME cur_time;
+unsigned long long total_size = 0;
 
 WINDOW * win_main;
 Server * server = nullptr;
@@ -107,7 +105,7 @@ struct t_worker_progress{
 
 std::vector<t_worker_progress> worker_progress;
 
-std::map <u_long, unsigned long long> satellite_size; // Структура с объемами плотов сателлитов
+std::map <u_long, unsigned long long> satellite_size;
 
 struct t_files{
 	std::string Path;
@@ -159,9 +157,9 @@ t_gpu gpu_devices;
 #endif
 
 
-CRITICAL_SECTION sessionsLock;	// обновление sessions
-CRITICAL_SECTION bestsLock;		// обновление bests
-CRITICAL_SECTION sharesLock;	// обновление shares
+CRITICAL_SECTION sessionsLock;	
+CRITICAL_SECTION bestsLock;
+CRITICAL_SECTION sharesLock;
 
 // ========== HEADERS ==========
 void ShowMemErrorExit(void);

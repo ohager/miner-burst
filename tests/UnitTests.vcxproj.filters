@@ -23,5 +23,23 @@
     <ClInclude Include="..\network\messages\HandshakeAckMessage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\network\messages\MiningMessage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\network\messages\ErrorMessage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\network\messages\HeartbeatMessage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\network\messages\MinerConfigMessage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\network\messages\PoolInfoMessage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\network\messages\SystemInfoMessage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

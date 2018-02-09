@@ -22,6 +22,9 @@
     <Filter Include="Header Files\network\messages">
       <UniqueIdentifier>{2e8ef2b5-52bf-4f06-acdf-a1330e77a680}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\network\data">
+      <UniqueIdentifier>{c3c600ed-b36a-438a-9a0f-37691a7bd791}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="miner.cpp">
@@ -101,7 +104,37 @@
     <ClInclude Include="network\messages\HandshakeAckMessage.h">
       <Filter>Header Files\network\messages</Filter>
     </ClInclude>
-    <ClInclude Include="network\messages\MiningMessage.h">
+    <ClInclude Include="network\messages\ErrorMessage.h">
+      <Filter>Header Files\network\messages</Filter>
+    </ClInclude>
+    <ClInclude Include="network\messages\HeartbeatMessage.h">
+      <Filter>Header Files\network\messages</Filter>
+    </ClInclude>
+    <ClInclude Include="network\messages\MinerConfigMessage.h">
+      <Filter>Header Files\network\messages</Filter>
+    </ClInclude>
+    <ClInclude Include="network\messages\PoolInfoMessage.h">
+      <Filter>Header Files\network\messages</Filter>
+    </ClInclude>
+    <ClInclude Include="network\messages\SystemInfoMessage.h">
+      <Filter>Header Files\network\messages</Filter>
+    </ClInclude>
+    <ClInclude Include="network\data\Error.h">
+      <Filter>Header Files\network\data</Filter>
+    </ClInclude>
+    <ClInclude Include="network\data\MinerConfig.h">
+      <Filter>Header Files\network\data</Filter>
+    </ClInclude>
+    <ClInclude Include="network\data\MiningData.h">
+      <Filter>Header Files\network\data</Filter>
+    </ClInclude>
+    <ClInclude Include="network\data\PoolInfo.h">
+      <Filter>Header Files\network\data</Filter>
+    </ClInclude>
+    <ClInclude Include="network\data\SystemInfo.h">
+      <Filter>Header Files\network\data</Filter>
+    </ClInclude>
+    <ClInclude Include="network\messages\MiningDataMessage.h">
       <Filter>Header Files\network\messages</Filter>
     </ClInclude>
   </ItemGroup>

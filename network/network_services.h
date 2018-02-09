@@ -1,5 +1,5 @@
 #pragma once
-#include <winsock2.h>
+#include <WinSock2.h>
 #include <Windows.h>
 
 class network_services

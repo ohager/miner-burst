@@ -3,6 +3,7 @@
 #include "../rapidjson/rapidjson.h"
 #include "../rapidjson/document.h"
 #include "messages/HandshakeAckMessage.h"
+#include "messages/MiningDataMessage.h"
 
 unsigned int Server::client_id;
 
@@ -19,7 +20,7 @@ Server::~Server(void)
 {
 }
 
-void Server::update()
+void Server::update(const MiningData& info)
 {
 	// get new clients
 	if (network->acceptNewClient(client_id))
@@ -30,6 +31,8 @@ void Server::update()
 	}
 
 	receiveJsonFromClients();
+
+	updateClients(info);
 }
 
 void Server::receiveJsonFromClients()
@@ -67,27 +70,22 @@ void Server::receiveJsonFromClients()
 
 		std::string type = d["type"].GetString();
 
-		handleMessage(type);
+		handleIncomingMessage(type);
 	}
 }
 
-
-void Server::sendActionPackets()
+void Server::updateClients(const MiningData& data) const
 {
-	// send action packet
-	/*
-	const unsigned int packet_size = sizeof(JsonPacket);
-	char packet_data[packet_size];
+	MiningDataMessage msg;
+	msg.deadline(data.deadline);
 
-	JsonPacket packet;
-
-	packet.serializeImpl(packet_data);
-	
-	network->sendToAll(packet_data, packet_size);
-	*/
+	size_t len = 0;
+	const char * serialized = msg.serialize(len);
+	std::cout << msg.deadline() << " size: " << len;
+	network->sendToAll(const_cast<char*>(serialized), len);
 }
 
-void Server::handleMessage(const std::string& type)
+void Server::handleIncomingMessage(const std::string& type)
 {
 	
 	if (type == "handshake")

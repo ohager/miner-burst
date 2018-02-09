@@ -1,18 +1,21 @@
 #pragma once
 
 #include <cstring>
+#include <string>
+#include <sstream>
 #include <exception>
 
-#define MSG_END 0xC // '/f' as required by client ipc
+#define MSG_END '\f' // '/f' as required by client ipc
+#define MAX_BUFFER_SIZE (16 * 1024)
 
 class BaseMessage
 {
 public:
 
-	BaseMessage(unsigned int buffer_size)
+	BaseMessage(const char * type)
 	{
-		_buf = new char[buffer_size];
-		_buffer_size = buffer_size;
+		_type = type;
+		_buf = nullptr;
 	}
 
 	virtual ~BaseMessage()
@@ -22,28 +25,48 @@ public:
 
 	const char * serialize(size_t & len)
 	{
-		const char * serialized = this->serializeImpl();
-		len = strlen(serialized); 		
-		if (len>=_buffer_size)
-		{
-			throw std::exception("Maximum buffer size exceeded");
-		}
+		std::stringstream ss;
 
-		memset(_buf, 0, _buffer_size);
-		memcpy(_buf, serialized, len);
-		_buf[len] = '\f';
+		std::string message = buildMessage();
+		len = message.size();
+		
+		if (len >= MAX_BUFFER_SIZE) throw std::exception("Maximum Message Buffer Size exceeded");
+
+		delete _buf;
+		_buf = new char[len + 2];
+		memset(_buf, 0, len + 2);
+		memcpy(_buf, message.c_str(), len);
+		_buf[len] = MSG_END;
 		++len;
 		return _buf;
 	}
 
-
 protected:
-	virtual const char * serializeImpl() const = 0;
-
-	virtual void deserialize(const char*) = 0;
+	virtual std::string serializePayload() const = 0;
 
 private:
+	std::string buildMessage() const
+	{
+
+		std::string payload = serializePayload();
+		std::stringstream ss;
+		// json structure
+		ss << "{"
+			<< R"("type":")" << _type << "\"";
+
+		if (!payload.empty())
+		{
+			ss	<< R"(,"data":{)" 
+					<< this->serializePayload()
+				<< "}";
+		}
+
+		ss	<< "}";
+
+		return ss.str();
+	}
+
+	std::string _type;
 	char * _buf;
 	unsigned _buffer_size;
-
 };

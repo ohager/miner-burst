@@ -1,22 +1,20 @@
 #pragma once
 #include "network.h"
+#include "data/MiningData.h"
 
 class Server
 {
-
 public:
 
     Server(unsigned int listen_port = DEFAULT_PORT);
     ~Server(void);
 
-    void update();
-
-	void receiveJsonFromClients();
-
-	void sendActionPackets();
+    void update(const MiningData & info);
 
 private:
-	void handleMessage(const std::string&);
+	void receiveJsonFromClients();
+	void handleIncomingMessage(const std::string&);
+	void updateClients(const MiningData & data) const;
 
    // IDs for the clients connecting for table in Network 
     static unsigned int client_id;

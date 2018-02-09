@@ -4,20 +4,15 @@
 class HandshakeAckMessage : public BaseMessage
 {
 public:
-	HandshakeAckMessage() : BaseMessage(64){}
+	HandshakeAckMessage() : BaseMessage("handshake_ack"){}
 
 	~HandshakeAckMessage()= default;
 
 protected:
-	const char * serializeImpl() const override
+	std::string serializePayload() const override
 	{
-		return R"({"type":"handshake_ack"})";
+		return "";
 	}
-
-	void deserialize(const char*) override
-	{
-		throw std::exception("Not implemented");
-	};
 };
 
 

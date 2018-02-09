@@ -155,7 +155,13 @@
     <ClCompile Include="MessageSerialization.test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\network\messages\ErrorMessage.h" />
     <ClInclude Include="..\network\messages\HandshakeAckMessage.h" />
+    <ClInclude Include="..\network\messages\HeartbeatMessage.h" />
+    <ClInclude Include="..\network\messages\MinerConfigMessage.h" />
+    <ClInclude Include="..\network\messages\MiningMessage.h" />
+    <ClInclude Include="..\network\messages\PoolInfoMessage.h" />
+    <ClInclude Include="..\network\messages\SystemInfoMessage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

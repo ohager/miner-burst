@@ -1466,7 +1466,6 @@ void work_i(const size_t local_num) {
 					CloseHandle(ifile);
 					files.clear();
 					VirtualFree(cache, 0, MEM_RELEASE);
-					//if (use_boost) SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_NORMAL);
 					return;
 				}
 				}
@@ -1478,8 +1477,6 @@ void work_i(const size_t local_num) {
 		}
 	worker_progress[local_num].isAlive = false;
 	QueryPerformanceCounter((LARGE_INTEGER*)&end_work_time);
-
-	//if (use_boost) SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_NORMAL);
 
 	double thread_time = (double)(end_work_time - start_work_time) / pcFreq;
 	if (use_debug)
@@ -1609,7 +1606,6 @@ void GetBlockInfo(unsigned const num_block)
 	unsigned long long timestamp1 = 0;
 	char tbuffer[9];
 	char* json;
-	// Запрос двух последних блоков из блокчейна
 
 	char* str_req = (char*)HeapAlloc(hHeap, HEAP_ZERO_MEMORY, MAX_PATH);
 	if (str_req == nullptr) ShowMemErrorExit();
@@ -1617,7 +1613,9 @@ void GetBlockInfo(unsigned const num_block)
 	json = GetJSON(str_req);
 	//Log("\n getBlocks: ");
 
-	if (json == nullptr)	Log("\n-! error in message from pool (getBlocks)\n");
+	if (json == nullptr){
+		Log("\n-! error in message from pool (getBlocks)\n");
+	}
 	else
 	{
 		rapidjson::Document doc_block;
@@ -1647,7 +1645,6 @@ void GetBlockInfo(unsigned const num_block)
 	if ((generator != nullptr) && (generatorRS != nullptr) && (timestamp0 != 0) && (timestamp1 != 0))
 		if (last_block_height == height - 1)
 		{
-			// Запрос данных аккаунта
 			str_req = (char*)HeapAlloc(hHeap, HEAP_ZERO_MEMORY, MAX_PATH);
 			if (str_req == nullptr) ShowMemErrorExit();
 			sprintf_s(str_req, HeapSize(hHeap, 0, str_req), "POST /burst?requestType=getAccount&account=%s HTTP/1.0\r\nConnection: close\r\n\r\n", generator);
@@ -1672,7 +1669,6 @@ void GetBlockInfo(unsigned const num_block)
 			HeapFree(hHeap, 0, str_req);
 			if (json != nullptr) HeapFree(hHeap, 0, json);
 
-			// Запрос RewardAssighnment по данному аккаунту
 			str_req = (char*)HeapAlloc(hHeap, HEAP_ZERO_MEMORY, MAX_PATH);
 			if (str_req == nullptr) ShowMemErrorExit();
 			sprintf_s(str_req, HeapSize(hHeap, 0, str_req), "POST /burst?requestType=getRewardRecipient&account=%s HTTP/1.0\r\nConnection: close\r\n\r\n", generator);
@@ -1684,7 +1680,7 @@ void GetBlockInfo(unsigned const num_block)
 			else
 			{
 				rapidjson::Document doc_reward;
-				if (doc_reward.Parse<0>(json).HasParseError() == false)
+				if (!doc_reward.Parse<0>(json).HasParseError())
 				{
 					if (doc_reward.HasMember("rewardRecipient"))
 					{
@@ -1700,10 +1696,8 @@ void GetBlockInfo(unsigned const num_block)
 
 			if (rewardRecipient != nullptr)
 			{
-				// Если rewardRecipient != generator, то майнит на пул, узнаём имя пула...
 				if (strcmp(generator, rewardRecipient) != 0)
 				{
-					// Запрос данных аккаунта пула
 					str_req = (char*)HeapAlloc(hHeap, HEAP_ZERO_MEMORY, MAX_PATH);
 					if (str_req == nullptr) ShowMemErrorExit();
 					sprintf_s(str_req, HeapSize(hHeap, 0, str_req), "POST /burst?requestType=getAccount&account=%s HTTP/1.0\r\nConnection: close\r\n\r\n", rewardRecipient);
@@ -1717,7 +1711,7 @@ void GetBlockInfo(unsigned const num_block)
 					else
 					{
 						rapidjson::Document doc_pool;
-						if (doc_pool.Parse<0>(json).HasParseError() == false)
+						if (!doc_pool.Parse<0>(json).HasParseError())
 						{
 							pool_accountRS = (char*)HeapAlloc(hHeap, HEAP_ZERO_MEMORY, strlen(doc_pool["accountRS"].GetString()) + 1);
 							if (pool_accountRS == nullptr) ShowMemErrorExit();
@@ -1964,9 +1958,15 @@ void updater_i(void) {
 		Log("\nGMI: ERROR in UpdaterAddr");
 		exit(2);
 	}
+
+	MiningData data;
+
 	for (; !exit_flag;)	{
-		server->update();
 		pollLocal();
+
+		data.deadline = deadline;
+		
+		server->update(data);
 		std::this_thread::yield();
 		std::this_thread::sleep_for(std::chrono::milliseconds(update_interval));
 	}
@@ -2049,6 +2049,8 @@ void GetCPUInfo(void)
 		wprintw(win_main, "\nRAM: %llu Mb", (unsigned long long)TotalMemoryInKilobytes / 1024, 0);
 
 	wprintw(win_main, "\n", 0);
+
+
 }
 
 
