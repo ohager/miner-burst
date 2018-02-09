@@ -104,8 +104,9 @@ bool Network::acceptNewClient(unsigned int & id)
         char value = 1;
         setsockopt( ClientSocket, IPPROTO_TCP, TCP_NODELAY, &value, sizeof( value ) );
 
+		sessions[id] = ClientSocket;
         // insert new client into session id table
-        sessions.insert( pair<unsigned int, SOCKET>(id, ClientSocket) );
+        //sessions.insert( pair<unsigned int, SOCKET>(id, ClientSocket) );
 
         return true;
     }
@@ -130,6 +131,7 @@ int Network::receiveData(unsigned int client_id, char * recvbuf)
         if (iResult == 0)
         {
 			printf("Connection closed for client #%u\n", client_id);
+			sessions.erase(client_id);
             closesocket(currentSocket);
         }
 
@@ -142,15 +144,21 @@ int Network::receiveData(unsigned int client_id, char * recvbuf)
 // send data to all clients
 void Network::sendToAll(char * packets, int totalSize)
 {
-	for (std::map<unsigned int, SOCKET>::iterator iter = sessions.begin(); iter != sessions.end(); ++iter)
+	std::map<unsigned int, SOCKET>::iterator iter;
+	for ( iter = sessions.begin(); iter != sessions.end(); ++iter)
     {
 	    const SOCKET currentSocket = iter->second;
+
+		if(currentSocket == INVALID_SOCKET) continue;
+		
 		const int iSendResult = network_services::sendMessage(currentSocket, packets, totalSize);
 
-        if (iSendResult == SOCKET_ERROR) 
-        {
-            printf("send failed with error: %d\n", WSAGetLastError());
-            closesocket(currentSocket);
+		if (iSendResult == SOCKET_ERROR)
+		{
+			printf("send failed with error: %d\n", WSAGetLastError());
+			closesocket(currentSocket);
+			// erasing iterator did not work...so its like this
+			iter->second = INVALID_SOCKET;
         }
     }
 }

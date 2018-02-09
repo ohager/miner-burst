@@ -4,6 +4,7 @@
 #include "../rapidjson/document.h"
 #include "messages/HandshakeAckMessage.h"
 #include "messages/MiningDataMessage.h"
+#include "messages/HeartbeatMessage.h"
 
 unsigned int Server::client_id;
 
@@ -76,13 +77,17 @@ void Server::receiveJsonFromClients()
 
 void Server::updateClients(const MiningData& data) const
 {
-	MiningDataMessage msg;
-	msg.deadline(data.deadline);
-
 	size_t len = 0;
-	const char * serialized = msg.serialize(len);
-	std::cout << msg.deadline() << " size: " << len;
-	network->sendToAll(const_cast<char*>(serialized), len);
+
+	HeartbeatMessage heartbeat;
+	std::cout << "HB#" << heartbeat.iteration();
+	const char * hb = heartbeat.serialize(len);
+	network->sendToAll(const_cast<char*>(hb), len);
+
+	MiningDataMessage mining;
+	mining.deadline(data.deadline);
+	const char * m = mining.serialize(len);
+	network->sendToAll(const_cast<char*>(m), len);
 }
 
 void Server::handleIncomingMessage(const std::string& type)
